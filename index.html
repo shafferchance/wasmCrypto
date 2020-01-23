@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WASM Hash tst</title>
+        <meta charset="utf-8">
+    </head>
+    <body style="display: flex; flex-direction: column;">
+        <div>
+            <label for="output">Output: </label>
+            <p id="output"></p>
+        </div>
+        <label for="user">Username: </label>
+        <input id="user"/>
+        <label for="pass">Password: </label>
+        <input id="pass"/>
+        <button id="submit">Submit</button>
+        <script src="./pkg/rust_encrypt_tst.js"></script>
+        <script type="module">
+            const { pw_hash } = wasm_bindgen;
+
+            async function run(){
+                await wasm_bindgen('./pkg/rust_encrypt_tst_bg.wasm');
+                const output = document.getElementById("output");
+                const un = document.getElementById("user");
+                const pass = document.getElementById("pass");
+                const submit = document.getElementById("submit");
+
+                submit.addEventListener("click", e => {
+                    e.preventDefault();
+                    console.log("Clicked");
+                    console.log(`UN: ${un.value} P-Word: ${pass.value}`);
+                    const res = pw_hash(un.value, pass.value);
+                    output.innerText = res;
+                }, false);
+            }
+
+            run();
+        </script>
+    </body>
+</html>
